@@ -1,0 +1,15 @@
+langchain
+langchain-community
+langchain-core
+langgraph
+chromadb
+tiktoken
+langchainhub
+tavily-python
+gpt4all
+fastembed
+langchain-nomic
+langchain-ollama
+langchain-text-splitters
+python-dotenv
+beautifulsoup4
