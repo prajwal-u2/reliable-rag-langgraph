@@ -32,6 +32,7 @@ class DataIngestion:
             collection_name=COLLECTION_NAME,
             client=self.client
         )
+        print("Stored documents in Chroma DB")
         return vectorstore.as_retriever(search_kwargs={"k":2})
 
     def run(self):
