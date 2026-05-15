@@ -23,14 +23,14 @@ class Router:
         self.models = Models()
     
 
-    def run(self):
+    def run(self, question: str) -> dict:
         question_router = self.prompt | self.models.json_llm | JsonOutputParser()
-        questions = ["transformers", "GPT", "Countries"]
-        for question in questions:
-            answer = question_router.invoke({"question": question})
-        print(answer)
+        return question_router.invoke({"question": question})
+
 
 if __name__ == "__main__":
     r = Router()
-    r.run()
+    test_questions = ["What is agent memory?", "Who won the 2024 election?", "How do diffusion models work?"]
+    for q in test_questions:
+        print(f"{q} → {r.run(q)}")
 

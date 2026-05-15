@@ -10,9 +10,16 @@ class DataIngestion:
     def __init__(self):
         self.models = Models()
         self.client = chromadb.HttpClient(host="localhost", port=8000)
+        self.collection = self.client.get_or_create_collection(COLLECTION_NAME)
 
-    def load(self):
-        docs = [WebBaseLoader(url).load() for url in URLS]
+    def get_ingested_sources(self):
+        if self.collection.count() == 0:
+            return set()
+        results = self.collection.get(include=["metadatas"])
+        return {m.get("source") for m in results["metadatas"] if m.get("source")}
+
+    def load(self, urls):
+        docs = [WebBaseLoader(url).load() for url in urls]
         docs_list = [item for sublist in docs for item in sublist]
         print(f"Loaded {len(docs_list)} documents")
         return docs_list
@@ -32,15 +39,31 @@ class DataIngestion:
             collection_name=COLLECTION_NAME,
             client=self.client
         )
-        print("Stored documents in Chroma DB")
-        return vectorstore.as_retriever(search_kwargs={"k":2})
+        print(f"Stored {len(doc_splits)} chunks in Chroma")
+        return vectorstore
 
-    def run(self):
-        docs_list = self.load()
-        doc_splits = self.chunk(docs_list)
-        retriever = self.store(doc_splits)
-        print("Ingestion complete.")
-        return retriever
+    def get_retriever(self):
+        vectorstore = Chroma(
+            collection_name=COLLECTION_NAME,
+            embedding_function=self.models.embed_model,
+            client=self.client
+        )
+        return vectorstore.as_retriever(search_kwargs={"k": 2})
+
+    def run(self, urls=None):
+        urls = urls or URLS
+        already_ingested = self.get_ingested_sources()
+        new_urls = [url for url in urls if url not in already_ingested]
+
+        if new_urls:
+            print(f"Ingesting {len(new_urls)} new URLs...")
+            docs_list = self.load(new_urls)
+            doc_splits = self.chunk(docs_list)
+            self.store(doc_splits)
+        else:
+            print("All URLs already ingested. Skipping.")
+
+        return self.get_retriever()
 
 
 if __name__ == "__main__":
