@@ -3,7 +3,7 @@ from langchain_core.output_parsers import StrOutputParser
 from src.models import Models
 
 
-class ChainGenerator:
+class AnswerGenerator:
 
     def __init__(self):
         self.prompt = ChatPromptTemplate.from_messages([
@@ -23,24 +23,24 @@ class ChainGenerator:
         rag_chain = self.prompt | self.models.llm | StrOutputParser()
         return rag_chain.invoke({"question": question, "context": context})
 
+# Testing only
+# if __name__ == "__main__":
+#     from src.ingestion import DataIngestion
+#     from src.router import Router
 
-if __name__ == "__main__":
-    from src.ingestion import DataIngestion
-    from src.router import Router
+#     question = "What is agent memory?"
 
-    question = "What is agent memory?"
+#     router = Router()
+#     result = router.run(question)
+#     print(f"Route: {result}")
 
-    router = Router()
-    result = router.run(question)
-    print(f"Route: {result}")
+#     if result["datasource"] == "vectorstore":
+#         ingestion = DataIngestion()
+#         retriever = ingestion.run()
+#         docs = retriever.invoke(question)
 
-    if result["datasource"] == "vectorstore":
-        ingestion = DataIngestion()
-        retriever = ingestion.run()
-        docs = retriever.invoke(question)
-
-        generator = ChainGenerator()
-        answer = generator.run(question, docs)
-        print(f"Answer: {answer}")
-    else:
-        print("Routed to web search")
+#         generator = AnswerGenerator()
+#         answer = generator.run(question, docs)
+#         print(f"Answer: {answer}")
+#     else:
+#         print("Routed to web search")

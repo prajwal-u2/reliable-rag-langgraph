@@ -65,7 +65,7 @@ class DataIngestion:
 
         return self.get_retriever()
 
-
-if __name__ == "__main__":
-    ingestion = DataIngestion()
-    ingestion.run()
+# Testing only
+# if __name__ == "__main__":
+#     ingestion = DataIngestion()
+#     ingestion.run()
