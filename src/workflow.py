@@ -17,7 +17,7 @@ class RagGraph:
 
         workflow.add_conditional_edges(START, self.edge.route_question, {
             "vectorstore": "retrieve",
-            "web_search": "websearch"
+            "websearch": "websearch"
         })
         workflow.add_edge("retrieve", "grade_document")
         workflow.add_edge("websearch", "generate")

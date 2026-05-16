@@ -1,0 +1,4 @@
+ragas
+datasets
+sentence-transformers
+langchain-huggingface
