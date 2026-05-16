@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 from datasets import Dataset
 from ragas import evaluate, RunConfig
-from ragas.metrics.collections import context_precision, context_recall, faithfulness, answer_relevancy
+from ragas.metrics import Faithfulness, AnswerRelevancy, ContextPrecision, ContextRecall
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -32,12 +32,10 @@ eval_data = {
 
 eval_data = {
     "question": [
-        "What is agent memory?",
-        "Who is Narendra Modi?",
+        "What is agent memory?"
     ],
     "ground_truth": [
-        "Agent memory allows LLMs to retain and recall information over time using external vector stores.",
-        "Narendra Modi is the Prime Minister of India, serving since 2014, and leader of the BJP party.",
+        "Agent memory allows LLMs to retain and recall information over time using external vector stores."
     ],
     "contexts": [],
     "answer": [],
@@ -65,7 +63,7 @@ ragas_embeddings = LangchainEmbeddingsWrapper(hf_embeddings)
 print("\nRunning RAGAs evaluation...")
 results = evaluate(
     dataset,
-    metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
+    metrics=[Faithfulness(), AnswerRelevancy(), ContextPrecision(), ContextRecall()],
     llm=ragas_llm,
     embeddings=ragas_embeddings,
     run_config=RunConfig(max_workers=1, timeout=180),
