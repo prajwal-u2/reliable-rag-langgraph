@@ -30,17 +30,6 @@ eval_data = {
     "answer": [],
 }
 
-eval_data = {
-    "question": [
-        "What is agent memory?"
-    ],
-    "ground_truth": [
-        "Agent memory allows LLMs to retain and recall information over time using external vector stores."
-    ],
-    "contexts": [],
-    "answer": [],
-}
-
 print("Building RAG pipeline...")
 app = RagGraph().build()
 
