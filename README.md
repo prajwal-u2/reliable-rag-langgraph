@@ -28,6 +28,8 @@ A production-style **Retrieval-Augmented Generation (RAG)** agent that combines 
 
 ## Pipeline
 
+![RAG Agent Workflow](rag_agent_workflow.png)
+
 ```
 User Question
       ↓
